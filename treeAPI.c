@@ -98,11 +98,7 @@ int parseFile(NodeTree *root, char *fileName) {
             irc == ERROR;
         }
 
-
     }
-
-
-
 
 }
 
@@ -124,28 +120,31 @@ int Insert(Node *pNode, const char *key, const char *strData, const int intData)
     const char *token;
     int newNode = 0;
     int count = countChars(key, '.');
+    Node *tmp;
 
     if (count != 0) {
-        token = strtok(key, delimiter);
+        token = strtok((char *) key, delimiter);
+        tmp = createNode(0, 0, NULL, createStringData(token));
     } else {
         token = key;
+        tmp = createNode(0, createIntData(intData), createStringData(strData), createStringData(token));
     }
 
     if (count == 0) {
-        appendChild(pNode, createIntData(intData), createStringData(strData), createStringData(token));
+        return appendChildNode(pNode, tmp);
         return OK;
     } else {
         for (int i = 0; i < pNode->children; i++) {
             if (strcmp(pNode->child[i]->name, token) == 0) {
-                if (count > 1) {
-                    token = strtok(NULL, "");
-                    printf("token 1: %s\n", token);
-                }
+//                if (count > 1) {
+//                    token = strtok(NULL, "");
+//                    printf("token 1: %s\n", token);
+//                }
                 return Insert(pNode->child[i], token, strData, intData);
             }
         }
-        newNode = appendChild(pNode, 0, NULL, createStringData(token));
-        if (count > 1) {
+        newNode = appendChildNode(pNode, tmp);
+        if (count > 0) {
             token = strtok(NULL, "");
             printf("token 2: %s\n", token);
         }
