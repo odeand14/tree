@@ -1,103 +1,23 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <memory.h>
-
-typedef struct TreeNode {
-    char *name;
-    void *data;
-    unsigned int n;
-    struct TreeNode **child;
-    } Node ;
-typedef Node NodeTree ;
-
-
-NodeTree *createNode (int children, void *data, char *name)
-{
-    Node *node = (Node*) calloc(1, sizeof(Node));
-    node->name = name;
-    node->data = data;
-    node->n = children;
-    node->child = (Node**) calloc(children, sizeof(Node*)) ;
-    return node ;
-}
-
-typedef void (*DataFreeFunc) (const void*) ;
-
-void freeTree (NodeTree *tree, DataFreeFunc dFree) {
-    unsigned i ;
-    if( tree == NULL) return;
-    for( i = 0 ; i < tree ->n; ++i) {
-        freeTree(tree->child[i], dFree);
-    }
-    free(tree->child);
-    if(dFree){
-        dFree(tree->data);
-    }
-    free(tree);
-}
-
-void *createIntData(int data){
-    int *ptr = (int*)calloc(1, sizeof(int));
-    *ptr = data;
-    return  ptr;
-}
-
-void *createDoubleData(double data) {
-    double *ptr = (double*)calloc(1, sizeof(double));
-    *ptr = data;
-    return  ptr;
-}
-
-void *createStringData(const char *string){
-    return strdup(string);
-}
-
-
-
-int appendChild(Node *root, void *data, char *name){
-    root->n++;
-    root->child = (Node**)realloc(root->child, (root->n) * sizeof(Node*));
-    root->child[root->n - 1] = createNode(0, data, name);
-    return root->n-1;
-}
-
-int insertChild(Node *root, int index, void *data, char *name) {
-    unsigned i;
-    root->n++;
-    root->child = (Node**)realloc(root->child, (root->n) * sizeof(Node*));
-
-    for (i = root->n-1; i > index; --i) {
-        root->child[i] = root->child[i-1];
-        root->child[i] = createNode(0, data, name);
-    }
-    return i;
-}
-
-void deleteChild(NodeTree *root, int index, DataFreeFunc dFree) {
-    unsigned i;
-    freeTree(root->child[index], dFree);
-
-    for (i = index; i < root->n-1; ++i) {
-        root->child[i] = root->child[i - 1];
-    }
-
-    root->n--;
-    root->child = (Node**)realloc(root->child, (root->n) * sizeof(Node*));
-}
-
-
-
-
-
-
-
+//
+// Created by Andreas on 10.11.2017.
+//
+#include "treeAPI.h"
+#define TESTFIL "input.txt"
 
 int main() {
-    NodeTree *tree = createNode(0, NULL, "root");
+    Node *tree = createNode(0, 0, NULL, "root");
 
+//    Insert(tree, "strings.no.header", "Oppdatering", 0);
+//    Insert(tree, "strings.no.text", "Oppdater programvaren", 0);
 
+    forEach(tree, 0);
 
+    parseFile(tree, TESTFIL);
+
+    forEach(tree, 0);
+    //freeTree(tree, );
 
     printf("Hello, World!\n");
+    printf("%i", tree->children);
     return 0;
 }
