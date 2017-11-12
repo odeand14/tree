@@ -136,10 +136,10 @@ int Insert(Node *pNode, const char *key, const char *strData, const int intData)
     } else {
         for (int i = 0; i < pNode->children; i++) {
             if (strcmp(pNode->child[i]->name, token) == 0) {
-//                if (count > 1) {
-//                    token = strtok(NULL, "");
-//                    printf("token 1: %s\n", token);
-//                }
+                if (count > 0) {
+                    token = strtok(NULL, "");
+                    printf("token 2: %s\n", token);
+                }
                 return Insert(pNode->child[i], token, strData, intData);
             }
         }
