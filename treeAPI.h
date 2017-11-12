@@ -37,7 +37,7 @@ void deleteChild(NodeTree *root, int index, DataFreeFunc dFree);
 static long getLineLength(FILE *f);
 int parseFile(Node *root, char *fileName);
 Node *createNode (unsigned int children, int intData, const char *strData, const char *name);
-int Insert(Node *pNode, const char *key, const char *strData, const int intData);
+int Insert(Node *pNode, const char *key, const char *strData, const int intData, int count);
 
 
 

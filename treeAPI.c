@@ -1,5 +1,8 @@
 #include "treeAPI.h"
 
+int countChars(const char *s, const char c )
+;
+
 Node *createNode (unsigned int children, int intData, const char *strData, const char *name) {
     Node *node = (Node*) calloc(1, sizeof(Node));
     node->name = name;
@@ -69,8 +72,8 @@ int parseFile(NodeTree *root, char *fileName) {
                         if (irc == OK) {
                             // At this point we should have an szKey, pszValue or iValue:
                             printf ("Ready to insert %s = '%s' or %d\n", stringKey, strData, intData);
-
-                            irc = Insert(root, stringKey, strData, intData);
+                            int count = countChars(stringKey, '.');
+                            irc = Insert(root, stringKey, strData, intData, count);
 
                             if (irc != OK) {
                                 printf ("Insert in list failed for %s.\n", line);
@@ -114,12 +117,12 @@ int compare(const Node *node, const char *token)
     return strcmp(node->name, token);
 }
 
-int Insert(Node *pNode, const char *key, const char *strData, const int intData) {
+int Insert(Node *pNode, const char *key, const char *strData, const int intData, int count) {
 
     const char delimiter[2] = ".";
     const char *token;
     int newNode = 0;
-    int count = countChars(key, '.');
+//    int count = countChars(key, '.');
     Node *tmp;
 
     if (count != 0) {
@@ -127,20 +130,24 @@ int Insert(Node *pNode, const char *key, const char *strData, const int intData)
         tmp = createNode(0, 0, NULL, createStringData(token));
     } else {
         token = key;
-        tmp = createNode(0, createIntData(intData), createStringData(strData), createStringData(token));
+        if (strData == NULL) {
+            tmp = createNode(0, createIntData(intData), NULL, createStringData(token));
+        } else {
+            tmp = createNode(0, 0, createStringData(strData), createStringData(token));
+        }
     }
 
     if (count == 0) {
-        return appendChildNode(pNode, tmp);
+        appendChildNode(pNode, tmp);
         return OK;
     } else {
         for (int i = 0; i < pNode->children; i++) {
             if (strcmp(pNode->child[i]->name, token) == 0) {
                 if (count > 0) {
                     token = strtok(NULL, "");
-                    printf("token 2: %s\n", token);
+                    printf("token 3: %s\n", token);
                 }
-                return Insert(pNode->child[i], token, strData, intData);
+                return Insert(pNode->child[i], token, strData, intData, --count);
             }
         }
         newNode = appendChildNode(pNode, tmp);
@@ -148,7 +155,7 @@ int Insert(Node *pNode, const char *key, const char *strData, const int intData)
             token = strtok(NULL, "");
             printf("token 2: %s\n", token);
         }
-        return Insert(pNode->child[newNode], token, strData, intData);
+        return Insert(pNode->child[newNode], token, strData, intData, --count);
     }
 }
 
@@ -182,7 +189,7 @@ void freeTree (NodeTree *tree, DataFreeFunc dFree) {
 int createIntData(int data){
     int *ptr = (int*)calloc(1, sizeof(int));
     *ptr = data;
-    return  ptr;
+    return (int) ptr;
 }
 
 
