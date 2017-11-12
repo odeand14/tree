@@ -16,7 +16,7 @@ int main() {
     forEach(tree, 0);
 //    freeTree(tree, freeStuff);
 
-//    deleteChild(tree, 1, freeStuff);
+    deleteChild(tree, 1);
 //    Insert(tree, "config.test", NULL, 10);
 
     forEach(tree, 0);

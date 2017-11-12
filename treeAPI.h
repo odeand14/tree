@@ -24,17 +24,17 @@ typedef struct Node {
 typedef Node NodeTree ;
 
 
-typedef void (*DataFreeFunc) (int intData, const char *strData, const char *name);
+typedef void (*DataFreeFunc) (int *intData, char *strData, char *name);
 
-void freeStuff(int intData, const char *strData, const char *name);
+void freeStuff(int *intData, char *strData, char *name);
 void forEach(Node *node, int level);
-void freeTree (NodeTree *tree, DataFreeFunc dFree);
+void freeTree (NodeTree *tree);
 int createIntData(int data);
 char *createStringData(const char *string);
 int appendChild(Node *root, int intData, const char *strData, const char *name);
 int appendChildNode(Node *root, Node *node);
 int insertChild(Node *root, int index, int intData, char *strData, char *name);
-void deleteChild(NodeTree *root, int index, DataFreeFunc dFree);
+void deleteChild(NodeTree *root, int index);
 static long getLineLength(FILE *f);
 int parseFile(Node *root, char *fileName);
 Node *createNode (unsigned int children, int intData, const char *strData, const char *name);

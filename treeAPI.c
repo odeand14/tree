@@ -177,16 +177,16 @@ static long getLineLength(FILE *f) {
     return l;
 }
 
-void freeTree (NodeTree *tree, DataFreeFunc dFree) {
+void freeTree (NodeTree *tree) {
     unsigned i ;
     if( tree == NULL) return;
     for( i = 0 ; i < tree->children; ++i) {
-        freeTree(tree->child[i], dFree);
+        freeTree(tree->child[i]);
     }
     free(tree->child);
-    if(dFree){
-        dFree( tree->intData, tree->strData, tree->name);
-    }
+//    if(dFree){
+//        dFree((int *) tree->intData, (char *) tree->strData, (char *) tree->name);
+//    }
     free(tree);
 }
 
@@ -219,18 +219,20 @@ void forEach(Node *node, int level)
     }
 }
 
-void Enumerate(char* key) {
+void Enumerate(Node *root, char* key) {
     int count = countChars(key, '.');
     const char delimiter[2] = ".";
     const char *token;
+    int found;
 
     for (int i = 0; i < count; ++i) {
-
+        found = -1;
         token = strtok(key, delimiter);
 
-//        if () {
-//
-//        }
+        for (int j = 0; j < root->children; ++j) {
+            if (strcmp(root->child[j]->name, token) == 0) found = j;
+        }
+
     }
 }
 
@@ -260,15 +262,20 @@ int insertChild(Node *root, int index, int intData, char *strData, char *name) {
     return i;
 }
 
-void freeStuff(int intData, const char *strData, const char *name) {
-    free((void *) intData);
-    free((void *) strData);
-    free((void *) name);
+void freeStuff(int *intData, char *strData, char *name) {
+    free(name);
+    if (strData != NULL) {
+    free(&strData);
+    }
+    if (intData != 0) {
+    free(&intData);
+
+    }
 }
 
-void deleteChild(NodeTree *root, int index, DataFreeFunc dFree) {
+void deleteChild(NodeTree *root, int index) {
     unsigned i;
-    freeTree(root->child[index], dFree);
+    freeTree(root->child[index]);
 
     for (i = index; i < root->children-1; ++i) {
         root->child[i] = root->child[i - 1];
