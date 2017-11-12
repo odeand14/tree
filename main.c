@@ -10,12 +10,16 @@ int main() {
 //    Insert(tree, "strings.no.header", "Oppdatering", 0);
 //    Insert(tree, "strings.no.text", "Oppdater programvaren", 0);
 
-    forEach(tree, 0);
 
     parseFile(tree, TESTFIL);
 
     forEach(tree, 0);
-    //freeTree(tree, );
+//    freeTree(tree, freeStuff);
+
+//    deleteChild(tree, 1, freeStuff);
+//    Insert(tree, "config.test", NULL, 10);
+
+    forEach(tree, 0);
 
     printf("Hello, World!\n");
     printf("%i", tree->children);

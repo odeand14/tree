@@ -24,8 +24,9 @@ typedef struct Node {
 typedef Node NodeTree ;
 
 
-typedef void (*DataFreeFunc) (const void*);
+typedef void (*DataFreeFunc) (int intData, const char *strData, const char *name);
 
+void freeStuff(int intData, const char *strData, const char *name);
 void forEach(Node *node, int level);
 void freeTree (NodeTree *tree, DataFreeFunc dFree);
 int createIntData(int data);
@@ -37,7 +38,7 @@ void deleteChild(NodeTree *root, int index, DataFreeFunc dFree);
 static long getLineLength(FILE *f);
 int parseFile(Node *root, char *fileName);
 Node *createNode (unsigned int children, int intData, const char *strData, const char *name);
-int Insert(Node *pNode, const char *key, const char *strData, const int intData, int count);
+int Insert(Node *pNode, const char *key, const char *strData, const int intData);
 
 
 
